@@ -1,9 +1,11 @@
 package com.predic8.stock.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.predic8.stock.error.NotFoundException;
 import com.predic8.stock.model.Stock;
 import com.predic8.stock.event.Operation;
 import java.util.Collection;
+import org.apache.kafka.clients.producer.ProducerRecord;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,6 +39,16 @@ public class StockRestController {
 
 	@GetMapping("/{id}")
 	public Stock get(@PathVariable String id) {
-		return stocks.get(id);
+		Stock stock = stocks.get(id);
+		if(stock == null) throw new NotFoundException();
+		return stock;
+	}
+
+	@PutMapping("/{id}/{quantity}")
+	public void setStock(@PathVariable String id, @PathVariable Integer quantity) {
+		Stock stock = get(id);
+		stock.setQuantity(quantity);
+		Operation op = new Operation("stock", "upsert", mapper.valueToTree(stock));
+		kafka.send(new ProducerRecord<>("shop", op));
 	}
 }
