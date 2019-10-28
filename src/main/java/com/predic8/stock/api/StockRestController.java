@@ -3,6 +3,7 @@ package com.predic8.stock.api;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.predic8.stock.model.Stock;
 import com.predic8.stock.event.Operation;
+import java.util.Collection;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,13 +26,17 @@ public class StockRestController {
 	}
 
 	@GetMapping
-	public List<Stock> index() {
-		// Todo
-		return null;
+	public Collection<Stock> index() {
+		return stocks.values();
 	}
 
 	@GetMapping("/count")
 	public long count() {
 		return stocks.size();
+	}
+
+	@GetMapping("/{id}")
+	public Stock get(@PathVariable String id) {
+		return stocks.get(id);
 	}
 }
