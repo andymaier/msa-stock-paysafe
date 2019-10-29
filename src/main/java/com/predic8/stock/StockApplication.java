@@ -4,6 +4,7 @@ import com.predic8.stock.model.Stock;
 import com.predic8.stock.event.NullAwareBeanUtilsBean;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.context.annotation.Bean;
 
 import java.util.Map;
@@ -13,6 +14,7 @@ import static org.springframework.boot.SpringApplication.run;
 
 
 @SpringBootApplication
+@EnableDiscoveryClient
 public class StockApplication {
 
 	@Bean

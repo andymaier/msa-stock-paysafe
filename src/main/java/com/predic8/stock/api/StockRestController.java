@@ -6,6 +6,7 @@ import com.predic8.stock.model.Stock;
 import com.predic8.stock.event.Operation;
 import java.util.Collection;
 import org.apache.kafka.clients.producer.ProducerRecord;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,10 +17,11 @@ import java.util.Map;
 @RestController
 public class StockRestController {
 	private final Map<String, Stock> stocks;
-
 	private ObjectMapper mapper;
-
 	private KafkaTemplate<String, Operation> kafka;
+
+	@Value("${server.port}")
+	public int port;
 
 	public StockRestController(Map<String, Stock> articles, ObjectMapper mapper, KafkaTemplate<String, Operation> kafka) {
 		this.stocks = articles;
@@ -42,6 +44,11 @@ public class StockRestController {
 		Stock stock = stocks.get(id);
 		if(stock == null) throw new NotFoundException();
 		return stock;
+	}
+
+	@GetMapping("/port")
+	public  String port() {
+		return String.valueOf(port);
 	}
 
 	@PutMapping("/{id}/{quantity}")
